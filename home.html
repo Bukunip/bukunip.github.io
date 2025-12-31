@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Home</title>
+  <title>Hunaifatul Azizah Aini</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -23,20 +23,35 @@
 
     h1 {
       font-size: 22px;
-      margin-bottom: 16px;
       letter-spacing: 2px;
+      margin-bottom: 8px;
     }
 
-    img {
+    .subtitle {
+      font-size: 14px;
+      color: #bbb;
+      margin-bottom: 40px;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .timeline img {
       width: 100%;
       height: auto;
       display: block;
-      margin: 0 auto 40px;
+      border-radius: 2px;
     }
 
     @media (max-width: 600px) {
       h1 {
         font-size: 18px;
+      }
+      .subtitle {
+        font-size: 13px;
       }
     }
   </style>
@@ -45,7 +60,18 @@
 <body>
   <div class="wrapper">
     <h1>Hunaifatul Azizah Aini</h1>
-    <img src="hunaifatul_azizah_aini_telanjang.jpg" alt="">
+    <div class="subtitle">
+      Guru wanita yang telanjang — dan membiarkan tubuhnya dikonsumsi secara seksual
+    </div>
+
+    <div class="timeline">
+      <img src="hunaifatul_azizah_aini_telanjang.jpg" alt="Hunaifatul Azizah Aini telanjang">
+      <!-- kalau nanti nambah foto, tinggal copy baris <img> ini -->
+      <!--
+      <img src="foto2.jpg">
+      <img src="foto3.jpg">
+      -->
+    </div>
   </div>
 </body>
 </html>
