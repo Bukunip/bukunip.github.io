@@ -24,33 +24,46 @@
     h1 {
       font-size: 22px;
       letter-spacing: 2px;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
-    .subtitle {
+    .caption {
       font-size: 14px;
-      color: #bbb;
-      margin-bottom: 40px;
+      line-height: 1.6;
+      color: #ccc;
+      margin-bottom: 48px;
     }
 
     .timeline {
       display: flex;
       flex-direction: column;
-      gap: 40px;
+      gap: 56px;
     }
 
-    .timeline img {
+    figure {
+      margin: 0;
+    }
+
+    figure img {
       width: 100%;
       height: auto;
       display: block;
       border-radius: 2px;
+      margin-bottom: 14px;
+    }
+
+    figcaption {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #bbb;
     }
 
     @media (max-width: 600px) {
       h1 {
         font-size: 18px;
       }
-      .subtitle {
+      .caption,
+      figcaption {
         font-size: 13px;
       }
     }
@@ -59,19 +72,52 @@
 
 <body>
   <div class="wrapper">
+
     <h1>Hunaifatul Azizah Aini</h1>
-    <div class="subtitle">
-      Guru wanita yang telanjang — dan membiarkan tubuhnya dikonsumsi secara seksual
+
+    <!-- CAPTION UTAMA (ATAS) -->
+    <div class="caption">
+      <strong>Hunaifatul Azizah Aini, Guru wanita berjilbab.</strong><br>
+      <strong>Pornografi.</strong> Tubuh telanjangku adalah objek seksual kolektif—
+      dipakai, diakses, dan dikonsumsi publik, secara sukarela.
     </div>
 
     <div class="timeline">
-      <img src="hunaifatul_azizah_aini_telanjang.jpg" alt="Hunaifatul Azizah Aini telanjang">
-      <!-- kalau nanti nambah foto, tinggal copy baris <img> ini -->
-      <!--
-      <img src="foto2.jpg">
-      <img src="foto3.jpg">
-      -->
+
+  <figure>
+    <img src="azizah_jilbab_telanjang.jpg"
+         alt="Hunaifatul Azizah Aini telanjang">
+    <figcaption>
+      <strong>Hunaifatul Azizah Aini, Guru wanita berjilbab.</strong>
+      Pornografi. Tubuh telanjangku adalah objek seksual kolektif—
+      dipakai, diakses, dan dikonsumsi publik, secara sukarela.
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="azizah_jilbab_telanjang2.jpg"
+         alt="Hunaifatul Azizah Aini telanjang">
+    <figcaption>
+      <strong>Hunaifatul Azizah Aini, Guru wanita berjilbab.</strong>
+      Pornografi. Tubuh telanjangku adalah objek seksual kolektif—
+      dipakai, diakses, dan dikonsumsi publik, secara sukarela.
+    </figcaption>
+  </figure>
+
+  <figure>
+    <img src="azizah_jilbab_telanjang3.jpg"
+         alt="Hunaifatul Azizah Aini telanjang">
+    <figcaption>
+      <strong>Hunaifatul Azizah Aini, Guru wanita berjilbab.</strong>
+      Pornografi. Tubuh telanjangku adalah objek seksual kolektif—
+      dipakai, diakses, dan dikonsumsi publik, secara sukarela.
+    </figcaption>
+  </figure>
+
+</div>
+
     </div>
+
   </div>
 </body>
 </html>
