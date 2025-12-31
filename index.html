@@ -1,101 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hunaifatul Azizah Aini</title>
+  <meta charset="UTF-8">
+  <title>Hunaifatul Azizah Aini</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-html, body {
-  margin: 0;
-  padding: 0;
-  background: black;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: "Times New Roman", serif;
-}
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
 
-/* Area utama */
-.viewer {
-  position: relative;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+    .container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-/* Foto */
-.viewer img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  cursor: zoom-in;
-  transition: transform 0.4s ease;
-}
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.4s ease;
+    }
 
-/* Zoom */
-.viewer img.zoom {
-  transform: scale(2);
-  cursor: zoom-out;
-}
+    /* tap / klik untuk zoom */
+    img:active {
+      transform: scale(1.6);
+    }
 
-/* Overlay teks */
-.overlay {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 48px 20px 36px;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
-  text-align: center;
-}
-
-/* Judul */
-.overlay h1 {
-  font-size: 22px;
-  letter-spacing: 3px;
-  font-weight: normal;
-  margin-bottom: 14px;
-}
-
-/* Subjudul */
-.overlay h2 {
-  font-size: 14px;
-  letter-spacing: 1.5px;
-  font-weight: normal;
-  opacity: 0.9;
-}
-
-/* Desktop */
-@media (min-width: 768px) {
-  .overlay h1 {
-    font-size: 26px;
-  }
-  .overlay h2 {
-    font-size: 16px;
-  }
-}
-</style>
+    .title {
+      position: absolute;
+      bottom: 24px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-family: serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      opacity: 0.9;
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="viewer">
-  <img id="photo" src="./hunaifatul_azizah_aini_telangjang.jpg" alt="Hunaifatul Azizah Aini">
-
-  <div class="overlay">
-    <h1>Hunaifatul Azizah Aini</h1>
-    <h2>Guru wanita yang telanjang—dan menikmati dilihat.</h2>
+  <div class="container">
+    <img src="hunaifatul_azizah_aini_telangjang.jpg" alt="Hunaifatul Azizah Aini">
+    <div class="title">
+      Hunaifatul Azizah Aini
+    </div>
   </div>
-</div>
-
-<script>
-const img = document.getElementById("photo");
-img.addEventListener("click", () => {
-  img.classList.toggle("zoom");
-});
-</script>
-
 </body>
 </html>
