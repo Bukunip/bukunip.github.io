@@ -91,6 +91,7 @@ figure{
 img{
   width:100%;
   display:block;
+  cursor:zoom-in;
 }
 .actions{
   margin-top:16px;
@@ -123,10 +124,26 @@ img{
   0%{transform:scale(0.6);opacity:1;}
   100%{transform:translate(var(--dx),var(--dy)) scale(1.2);opacity:0;}
 }
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.lightbox img{
+  max-width:96%;
+  max-height:96%;
+}
 </style>
 </head>
 
 <body>
+
 <div class="wrapper">
 
 <h1>Hunaifatul Azizah Aini</h1>
@@ -152,7 +169,8 @@ Hunaifatul Azizah berjilbab telanjang
 
 <figure>
 <img src="porno-hunaifatul-azizah-berjilbab-telanjang.jpg"
-alt="Hunaifatul Azizah Aini guru Ngreco figur dewasa">
+alt="Hunaifatul Azizah Aini guru Ngreco figur dewasa"
+onclick="openImg(this.src)">
 
 <div class="actions">
 <span class="like" onclick="like('l1','bukunip-like-1')">❤️ Like</span>
@@ -166,7 +184,8 @@ Download resolusi asli
 
 <figure>
 <img src="porno-hunaifatul-azizah-berjilbab-telanjang-1.jpg"
-alt="Hunaifatul Azizah Aini janda Ngreco figur dewasa">
+alt="Hunaifatul Azizah Aini janda Ngreco figur dewasa"
+onclick="openImg(this.src)">
 
 <div class="actions">
 <span class="like" onclick="like('l2','bukunip-like-2')">❤️ Like</span>
@@ -180,7 +199,8 @@ Download resolusi asli
 
 <figure>
 <img src="porno-hunaifatul-azizah-berjilbab-telanjang-2.jpg"
-alt="Hunaifatul Azizah Aini guru Ngreco telanjang figur publik">
+alt="Hunaifatul Azizah Aini guru Ngreco telanjang figur publik"
+onclick="openImg(this.src)">
 
 <div class="actions">
 <span class="like" onclick="like('l3','bukunip-like-3')">❤️ Like</span>
@@ -198,7 +218,8 @@ Hunaifatul Azizah telanjang
 
 <figure>
 <img src="porno-hunaifatul-azizah-telanjang.jpg"
-alt="Hunaifatul Azizah Aini telanjang figur dewasa Ngreco">
+alt="Hunaifatul Azizah Aini telanjang figur dewasa Ngreco"
+onclick="openImg(this.src)">
 
 <div class="actions">
 <span class="like" onclick="like('l4','bukunip-like-4')">❤️ Like</span>
@@ -212,7 +233,18 @@ Download resolusi asli
 
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.style.display='none'">
+  <img id="lightbox-img">
+</div>
+
 <script>
+function openImg(src){
+  const lb=document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src=src;
+  lb.style.display='flex';
+}
+
 function like(id,key){
   fetch('https://api.countapi.xyz/hit/'+key)
   .then(r=>r.json())
