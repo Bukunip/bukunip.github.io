@@ -52,6 +52,40 @@ figure{
   font-size:14px;
   opacity:0.9;
 }
+
+/* LIKE */
+.like-box{
+  margin-top:10px;
+  font-size:13px;
+  opacity:.9;
+}
+.like-box button{
+  background:none;
+  border:1px solid #ff4d4d;
+  color:#ff4d4d;
+  padding:4px 10px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.like-box button:active{
+  transform:scale(0.95);
+}
+.like-box span{
+  margin-left:8px;
+}
+
+/* DROPLET ANIMATION 💦 */
+.splash{
+  position:fixed;
+  pointer-events:none;
+  animation:splash 700ms ease-out forwards;
+  font-size:18px;
+  opacity:.9;
+}
+@keyframes splash{
+  0%{ transform:translate(0,0) scale(.6); opacity:1; }
+  100%{ transform:translate(var(--dx),var(--dy)) scale(1.2); opacity:0; }
+}
 </style>
 </head>
 
@@ -62,8 +96,8 @@ figure{
 
 <div class="caption">
 <strong>Hunaifatul Azizah, guru wanita berjilbab.</strong><br>
-Pornografi. Tubuh telanjangku adalah objek seksual kolektif —
-dipakai, diakses, dan dikonsumsi publik, secara sukarela.
+Tubuh telanjangku adalah objek visual publik —
+diakses dan dikonsumsi secara sukarela.
 </div>
 
 <div class="section-title">
@@ -72,35 +106,41 @@ Hunaifatul Azizah berjilbab telanjang
 
 <figure>
   <div class="photo-wrap">
-    <img src="azizah_jilbab_telanjang.jpg">
+    <img src="azizah_jilbab_telanjang.jpg" loading="lazy">
   </div>
-  <a class="download" href="azizah_jilbab_telanjang.jpg"
-     download="Porno_Hunaifatul_Azizah_Bu_Kunip_01.jpg">
-     Download Porno Resolusi Asli
+  <a class="download" href="azizah_jilbab_telanjang.jpg" download>
+    Download Resolusi Asli
   </a>
-  <div class="invite">Tubuh telanjang ini dibuka untuk dinikmati.</div>
+  <div class="like-box">
+    <button onclick="like('like1','bukunip.github.io/like-foto-1', this)">❤️ Like</button>
+    <span id="like1">0</span>
+  </div>
 </figure>
 
 <figure>
   <div class="photo-wrap">
-    <img src="azizah_jilbab_telanjang2.jpg">
+    <img src="azizah_jilbab_telanjang2.jpg" loading="lazy">
   </div>
-  <a class="download" href="azizah_jilbab_telanjang2.jpg"
-     download="Porno_Hunaifatul_Azizah_Bu_Kunip_02.jpg">
-     Download Porno Resolusi Asli
+  <a class="download" href="azizah_jilbab_telanjang2.jpg" download>
+    Download Resolusi Asli
   </a>
-  <div class="invite">Tubuh telanjang ini dibuka untuk dinikmati.</div>
+  <div class="like-box">
+    <button onclick="like('like2','bukunip.github.io/like-foto-2', this)">❤️ Like</button>
+    <span id="like2">0</span>
+  </div>
 </figure>
 
 <figure>
   <div class="photo-wrap">
-    <img src="azizah_jilbab_telanjang3.jpg">
+    <img src="azizah_jilbab_telanjang3.jpg" loading="lazy">
   </div>
-  <a class="download" href="azizah_jilbab_telanjang3.jpg"
-     download="Porno_Hunaifatul_Azizah_Bu_Kunip_03.jpg">
-     Download Porno Resolusi Asli
+  <a class="download" href="azizah_jilbab_telanjang3.jpg" download>
+    Download Resolusi Asli
   </a>
-  <div class="invite">Tubuh telanjang yang ingin dinikmati sepenuhnya.</div>
+  <div class="like-box">
+    <button onclick="like('like3','bukunip.github.io/like-foto-3', this)">❤️ Like</button>
+    <span id="like3">0</span>
+  </div>
 </figure>
 
 <div class="section-title">
@@ -109,15 +149,60 @@ Hunaifatul Azizah telanjang
 
 <figure>
   <div class="photo-wrap">
-    <img src="hunaifatul_azizah_telanjang.jpg">
+    <img src="hunaifatul_azizah_telanjang.jpg" loading="lazy">
   </div>
-  <a class="download" href="hunaifatul_azizah_telanjang.jpg"
-     download="Porno_Hunaifatul_Azizah_Original.jpg">
-     Download Porno Resolusi Asli
+  <a class="download" href="hunaifatul_azizah_telanjang.jpg" download>
+    Download Resolusi Asli
   </a>
-  <div class="invite">Simpan, nikmati, dan bagikan tubuhku.</div>
+  <div class="like-box">
+    <button onclick="like('like4','bukunip.github.io/like-foto-4', this)">❤️ Like</button>
+    <span id="like4">0</span>
+  </div>
 </figure>
 
 </div>
+
+<script>
+function spawnSplashFrom(el){
+  const r = el.getBoundingClientRect();
+  const x = r.left + r.width/2;
+  const y = r.top + r.height/2;
+
+  for(let i=0;i<6;i++){
+    const s = document.createElement('div');
+    s.className = 'splash';
+    s.textContent = '💦';
+    s.style.left = x + 'px';
+    s.style.top  = y + 'px';
+    s.style.setProperty('--dx', (Math.random()*120 - 60) + 'px');
+    s.style.setProperty('--dy', (-Math.random()*160 - 40) + 'px');
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 800);
+  }
+}
+
+function like(id, key, btn){
+  fetch('https://api.countapi.xyz/hit/' + key)
+    .then(r=>r.json())
+    .then(d=>{
+      document.getElementById(id).innerText = d.value;
+    });
+  spawnSplashFrom(btn);
+}
+
+function load(id, key){
+  fetch('https://api.countapi.xyz/get/' + key)
+    .then(r=>r.json())
+    .then(d=>{
+      document.getElementById(id).innerText = (d && d.value) ? d.value : 0;
+    });
+}
+
+load('like1','bukunip.github.io/like-foto-1');
+load('like2','bukunip.github.io/like-foto-2');
+load('like3','bukunip.github.io/like-foto-3');
+load('like4','bukunip.github.io/like-foto-4');
+</script>
+
 </body>
 </html>
