@@ -19,14 +19,13 @@ body{
   margin:auto;
   padding:40px 16px 120px
 }
-h1{font-weight:normal}
 figure{
   margin:0 auto 90px;
-  position:relative;
 }
 img{
   width:100%;
   display:block;
+  cursor:zoom-in;
 }
 .download{
   display:block;
@@ -43,21 +42,19 @@ a.nav{
   font-weight:bold
 }
 
-/* OVERLAY KERAS */
-.overlay-text{
-  position:absolute;
-  top:14px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,.85);
-  color:#fff;
-  padding:16px 22px;
-  font-size:18px;
-  line-height:1.35;
-  letter-spacing:1px;
-  text-align:center;
-  z-index:5;
-  text-transform:uppercase;
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.95);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+.lightbox img{
+  max-width:96%;
+  max-height:96%;
 }
 </style>
 </head>
@@ -68,55 +65,39 @@ a.nav{
 <p>
 <strong>Hunaifatul Azizah Aini</strong><br>
 Janda Ngreco. Guru dan operator sekolah di Ngreco.<br>
-Wanita dewasa yang sadar tubuhnya dilihat dan diinginkan.
+Wanita dewasa yang menginginkan tubuhnya disetubuhi.
 </p>
 
-
 <figure>
-  <div class="overlay-text">
-    HUNAIFATUL AZIZAH AINI<br>
-  </div>
-  <img src="porno-hunaifatul-azizah-aini-telanjang-01.jpg">
+  <img src="porno-hunaifatul-azizah-aini-telanjang-01.jpg" onclick="openImg(this.src)">
   <a class="download" href="porno-hunaifatul-azizah-aini-telanjang-01.jpg" download>
     Download resolusi asli
   </a>
 </figure>
 
 <figure>
-  <div class="overlay-text">
-    HUNAIFATUL AZIZAH AINI<br>
-  </div>
-  <img src="porno-hunaifatul-azizah-aini-telanjang-02.jpg">
+  <img src="porno-hunaifatul-azizah-aini-telanjang-02.jpg" onclick="openImg(this.src)">
   <a class="download" href="porno-hunaifatul-azizah-aini-telanjang-02.jpg" download>
     Download resolusi asli
   </a>
 </figure>
 
 <figure>
-  <div class="overlay-text">
-    HUNAIFATUL AZIZAH AINI<br>
-  </div>
-  <img src="porno-hunaifatul-azizah-aini-telanjang-03.jpg">
+  <img src="porno-hunaifatul-azizah-aini-telanjang-03.jpg" onclick="openImg(this.src)">
   <a class="download" href="porno-hunaifatul-azizah-aini-telanjang-03.jpg" download>
     Download resolusi asli
   </a>
 </figure>
 
 <figure>
-  <div class="overlay-text">
-    HUNAIFATUL AZIZAH AINI<br>
-  </div>
-  <img src="porno-hunaifatul-azizah-aini-telanjang-04.jpg">
+  <img src="porno-hunaifatul-azizah-aini-telanjang-04.jpg" onclick="openImg(this.src)">
   <a class="download" href="porno-hunaifatul-azizah-aini-telanjang-04.jpg" download>
     Download resolusi asli
   </a>
 </figure>
 
 <figure>
-  <div class="overlay-text">
-    HUNAIFATUL AZIZAH AINI<br>
-  </div>
-  <img src="porno-hunaifatul-azizah-aini-telanjang-05.jpg">
+  <img src="porno-hunaifatul-azizah-aini-telanjang-05.jpg" onclick="openImg(this.src)">
   <a class="download" href="porno-hunaifatul-azizah-aini-telanjang-05.jpg" download>
     Download resolusi asli
   </a>
@@ -125,5 +106,18 @@ Wanita dewasa yang sadar tubuhnya dilihat dan diinginkan.
 <a class="nav" href="jilbab.html">← Kembali ke Jilbab</a>
 
 </div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.style.display='none'">
+  <img id="lightbox-img">
+</div>
+
+<script>
+function openImg(src){
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').style.display = 'flex';
+}
+</script>
+
 </body>
 </html>
