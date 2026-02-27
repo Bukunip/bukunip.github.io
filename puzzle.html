@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Multi Level</title>
+
+<style>
+body{
+    background:#111;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    height:100vh;
+}
+
+#puzzle{
+    display:grid;
+    gap:2px;
+}
+
+.tile{
+    background-image:url("images/gambarmu.jpg");
+    background-size:400px 400px;
+    filter:blur(6px);
+    cursor:pointer;
+}
+
+button{
+    margin-top:20px;
+    padding:10px 18px;
+    font-size:16px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Puzzle Level <span id="level">1</span></h2>
+
+<div id="puzzle"></div>
+<button onclick="nextLevel()">Next Level</button>
+
+<script>
+let level = 1;
+
+function setupPuzzle(){
+    const puzzle = document.getElementById("puzzle");
+    const levelText = document.getElementById("level");
+
+    puzzle.innerHTML = "";
+
+    let gridSize;
+    let blurLevel;
+
+    if(level === 1){
+        gridSize = 3;
+        blurLevel = 8;
+    }else if(level === 2){
+        gridSize = 4;
+        blurLevel = 10;
+    }else{
+        gridSize = 5;
+        blurLevel = 12;
+    }
+
+    levelText.innerText = level;
+
+    puzzle.style.gridTemplateColumns = `repeat(${gridSize},1fr)`;
+    puzzle.style.gridTemplateRows = `repeat(${gridSize},1fr)`;
+
+    let tileSize = 400 / gridSize;
+
+    for(let i=0;i<gridSize*gridSize;i++){
+        let tile = document.createElement("div");
+        tile.classList.add("tile");
+
+        tile.style.width = tileSize+"px";
+        tile.style.height = tileSize+"px";
+        tile.style.backgroundSize = "400px 400px";
+        tile.style.filter = `blur(${blurLevel}px)`;
+
+        puzzle.appendChild(tile);
+    }
+}
+
+function nextLevel(){
+    if(level < 3){
+        level++;
+        setupPuzzle();
+    }else{
+        alert("Puzzle selesai!");
+        document.querySelectorAll(".tile").forEach(t=>{
+            t.style.filter = "blur(0px)";
+        });
+    }
+}
+
+setupPuzzle();
+</script>
+
+</body>
+</html>
