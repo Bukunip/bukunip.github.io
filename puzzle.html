@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Puzzle Game</title>
+<title>Puzzle Premium</title>
 
 <style>
 body{
@@ -13,73 +13,94 @@ body{
 }
 
 #puzzle{
-    width:300px;
-    height:300px;
+    width:90vw;
+    max-width:400px;
+    aspect-ratio:1/1;
     display:grid;
-    grid-template-columns:repeat(3,1fr);
     gap:2px;
     margin:auto;
 }
 
 .tile{
-    background-image:url("pelacur-berjilbab-hunaifatul-azizah-aini.jpg"); /* GANTI GAMBAR */
-    background-size:300px 300px;
-    filter:blur(8px);
-    cursor:pointer;
+    background-image:url("images/gambar.jpg");
+    background-size:100% 100%;
+    cursor:grab;
+    user-select:none;
+    transition:0.2s;
 }
 
 #downloadBtn{
     display:none;
     margin-top:20px;
-    padding:10px 18px;
+    padding:12px 20px;
+    font-size:16px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Puzzle Game</h2>
-
+<h2>Puzzle Premium</h2>
 <div id="puzzle"></div>
-
 <button id="downloadBtn">Download Gambar</button>
 
 <script>
-const puzzle = document.getElementById("puzzle");
-const downloadBtn = document.getElementById("downloadBtn");
+let level=3;
+let size=level;
+const puzzle=document.getElementById("puzzle");
+const image="images/gambar.jpg";
 
-const imagePath = "pelacur-berjilbab-hunaifatul-azizah-aini-5.jpg"; // GANTI GAMBAR
-
-const size = 3;
-const tileSize = 300 / size;
-
-// Buat puzzle sederhana
-for(let i=0;i<size*size;i++){
-    let tile = document.createElement("div");
-
-    tile.className = "tile";
-    tile.style.width = tileSize+"px";
-    tile.style.height = tileSize+"px";
-    tile.style.height = tileSize+"px";
-    tile.style.backgroundImage = `url(${imagePath})`;
-
-    puzzle.appendChild(tile);
+function shuffle(arr){
+    return arr.sort(()=>Math.random()-0.5);
 }
 
-// Klik puzzle → selesai → buka reward
-puzzle.onclick = function(){
-    document.querySelectorAll(".tile").forEach(t=>{
-        t.style.filter = "blur(0px)";
+function createPuzzle(){
+    puzzle.innerHTML="";
+
+    let tiles=[...Array(size*size).keys()];
+    tiles=shuffle(tiles);
+
+    puzzle.style.gridTemplateColumns=`repeat(${size},1fr)`;
+
+    let tileSize=400/size;
+
+    tiles.forEach((pos,i)=>{
+        let tile=document.createElement("div");
+        tile.className="tile";
+
+        let row=Math.floor(pos/size);
+        let col=pos%size;
+
+        tile.style.width="100%";
+        tile.style.height="100%";
+        tile.style.backgroundImage=`url(${image})`;
+        tile.style.backgroundPosition=
+        `${(col*100)/(size-1)}% ${(row*100)/(size-1)}%`;
+
+        tile.draggable=true;
+
+        tile.addEventListener("dragstart",e=>{
+            e.dataTransfer.setData("text",i);
+        });
+
+        tile.addEventListener("dragover",e=>{
+            e.preventDefault();
+        });
+
+        tile.addEventListener("drop",e=>{
+            e.preventDefault();
+        });
+
+        puzzle.appendChild(tile);
     });
+}
 
-    downloadBtn.style.display = "block";
-};
+createPuzzle();
 
-// Download gambar
-downloadBtn.onclick = function(){
-    let a = document.createElement("a");
-    a.href = imagePath;
-    a.download = "puzzle-result.jpg";
+document.getElementById("downloadBtn").onclick=function(){
+    let a=document.createElement("a");
+    a.href=image;
+    a.download="puzzle-result.jpg";
     a.click();
 };
 </script>
