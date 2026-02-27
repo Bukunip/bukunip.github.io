@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Puzzle Premium</title>
+<title>Puzzle Game Multi-Gambar</title>
 
 <style>
 body{
@@ -17,16 +17,18 @@ body{
     max-width:400px;
     aspect-ratio:1/1;
     display:grid;
+    grid-template-columns:repeat(3,1fr);
     gap:2px;
     margin:auto;
 }
 
 .tile{
-    background-image:url("pelacur-berjilbab-hunaifatul-azizah-aini-3.jpg");
-    background-size:100% 100%;
     cursor:grab;
     user-select:none;
     transition:0.2s;
+    width:100%;
+    height:100%;
+    background-size:300% 300%;
 }
 
 #downloadBtn{
@@ -40,69 +42,65 @@ body{
 
 <body>
 
-<h2>Puzzle Premium</h2>
+<h2>Puzzle Game Multi-Gambar</h2>
+
+<!-- Pilih gambar -->
+<select id="gambarSelect">
+    <option value="pelacur-berjilbab-hunaifatul-azizah-aini.jpg">Gambar 1</option>
+    <option value="pelacur-berjilbab-hunaifatul-azizah-aini-3.jpg">Gambar 2</option>
+    <option value="pelacur-berjilbab-hunaifatul-azizah-aini-5.jpg">Gambar 3</option>
+</select>
+
 <div id="puzzle"></div>
 <button id="downloadBtn">Download Gambar</button>
 
 <script>
-let level=3;
-let size=level;
-const puzzle=document.getElementById("puzzle");
-const image="images/gambar.jpg";
+const puzzle = document.getElementById("puzzle");
+const downloadBtn = document.getElementById("downloadBtn");
+const selectGambar = document.getElementById("gambarSelect");
 
-function shuffle(arr){
-    return arr.sort(()=>Math.random()-0.5);
-}
+const size = 3;
+let imagePath = "images/pelacur-berjilbab-hunaifatul-azizah-aini.jpg";
 
+// buat puzzle
 function createPuzzle(){
     puzzle.innerHTML="";
-
-    let tiles=[...Array(size*size).keys()];
-    tiles=shuffle(tiles);
-
     puzzle.style.gridTemplateColumns=`repeat(${size},1fr)`;
 
-    let tileSize=400/size;
-
-    tiles.forEach((pos,i)=>{
-        let tile=document.createElement("div");
+    for(let i=0;i<size*size;i++){
+        let tile = document.createElement("div");
         tile.className="tile";
-
-        let row=Math.floor(pos/size);
-        let col=pos%size;
-
-        tile.style.width="100%";
-        tile.style.height="100%";
-        tile.style.backgroundImage=`url(${image})`;
-        tile.style.backgroundPosition=
-        `${(col*100)/(size-1)}% ${(row*100)/(size-1)}%`;
-
-        tile.draggable=true;
-
-        tile.addEventListener("dragstart",e=>{
-            e.dataTransfer.setData("text",i);
-        });
-
-        tile.addEventListener("dragover",e=>{
-            e.preventDefault();
-        });
-
-        tile.addEventListener("drop",e=>{
-            e.preventDefault();
-        });
-
+        tile.style.backgroundImage = `url("images/${imagePath}")`;
+        tile.style.backgroundPosition = "center";
         puzzle.appendChild(tile);
-    });
+    }
 }
 
-createPuzzle();
+// klik puzzle → selesai → buka download
+puzzle.onclick = function(){
+    document.querySelectorAll(".tile").forEach(t=>{
+        t.style.filter="blur(0px)";
+    });
+    downloadBtn.style.display = "block";
+};
 
-document.getElementById("downloadBtn").onclick=function(){
-    let a=document.createElement("a");
-    a.href=image;
-    a.download="puzzle-result.jpg";
+// tombol download
+downloadBtn.onclick = function(){
+    let a = document.createElement("a");
+    a.href = `images/${imagePath}`;
+    a.download = "puzzle-result.jpg";
     a.click();
 };
+
+// ganti gambar via select
+selectGambar.onchange = function(){
+    imagePath = this.value;
+    downloadBtn.style.display="none";
+    createPuzzle();
+}
+
+// init
+createPuzzle();
 </script>
 
 </body>
