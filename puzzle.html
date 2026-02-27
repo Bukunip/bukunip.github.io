@@ -2,102 +2,86 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Puzzle Multi Level</title>
+<title>Puzzle Game</title>
 
 <style>
 body{
     background:#111;
     color:white;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    height:100vh;
+    text-align:center;
+    font-family:Arial;
 }
 
 #puzzle{
+    width:300px;
+    height:300px;
     display:grid;
+    grid-template-columns:repeat(3,1fr);
     gap:2px;
+    margin:auto;
 }
 
 .tile{
-    background-image:url("images/gambarmu.jpg");
-    background-size:400px 400px;
-    filter:blur(6px);
+    background-image:url("images/gambar.jpg"); /* GANTI GAMBAR */
+    background-size:300px 300px;
+    filter:blur(8px);
     cursor:pointer;
 }
 
-button{
+#downloadBtn{
+    display:none;
     margin-top:20px;
     padding:10px 18px;
-    font-size:16px;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Puzzle Level <span id="level">1</span></h2>
+<h2>Puzzle Game</h2>
 
 <div id="puzzle"></div>
-<button onclick="nextLevel()">Next Level</button>
+
+<button id="downloadBtn">Download Gambar</button>
 
 <script>
-let level = 1;
+const puzzle = document.getElementById("puzzle");
+const downloadBtn = document.getElementById("downloadBtn");
 
-function setupPuzzle(){
-    const puzzle = document.getElementById("puzzle");
-    const levelText = document.getElementById("level");
+const imagePath = "images/gambar.jpg"; // GANTI GAMBAR
 
-    puzzle.innerHTML = "";
+const size = 3;
+const tileSize = 300 / size;
 
-    let gridSize;
-    let blurLevel;
+// Buat puzzle sederhana
+for(let i=0;i<size*size;i++){
+    let tile = document.createElement("div");
 
-    if(level === 1){
-        gridSize = 3;
-        blurLevel = 8;
-    }else if(level === 2){
-        gridSize = 4;
-        blurLevel = 10;
-    }else{
-        gridSize = 5;
-        blurLevel = 12;
-    }
+    tile.className = "tile";
+    tile.style.width = tileSize+"px";
+    tile.style.height = tileSize+"px";
+    tile.style.height = tileSize+"px";
+    tile.style.backgroundImage = `url(${imagePath})`;
 
-    levelText.innerText = level;
-
-    puzzle.style.gridTemplateColumns = `repeat(${gridSize},1fr)`;
-    puzzle.style.gridTemplateRows = `repeat(${gridSize},1fr)`;
-
-    let tileSize = 400 / gridSize;
-
-    for(let i=0;i<gridSize*gridSize;i++){
-        let tile = document.createElement("div");
-        tile.classList.add("tile");
-
-        tile.style.width = tileSize+"px";
-        tile.style.height = tileSize+"px";
-        tile.style.backgroundSize = "400px 400px";
-        tile.style.filter = `blur(${blurLevel}px)`;
-
-        puzzle.appendChild(tile);
-    }
+    puzzle.appendChild(tile);
 }
 
-function nextLevel(){
-    if(level < 3){
-        level++;
-        setupPuzzle();
-    }else{
-        alert("Puzzle selesai!");
-        document.querySelectorAll(".tile").forEach(t=>{
-            t.style.filter = "blur(0px)";
-        });
-    }
-}
+// Klik puzzle → selesai → buka reward
+puzzle.onclick = function(){
+    document.querySelectorAll(".tile").forEach(t=>{
+        t.style.filter = "blur(0px)";
+    });
 
-setupPuzzle();
+    downloadBtn.style.display = "block";
+};
+
+// Download gambar
+downloadBtn.onclick = function(){
+    let a = document.createElement("a");
+    a.href = imagePath;
+    a.download = "puzzle-result.jpg";
+    a.click();
+};
 </script>
 
 </body>
