@@ -1,214 +1,148 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta charset="UTF-8">
-<title>Puzzle 4x4</title>
-
-<style>
-body{
-  margin:0;
-  background:#111;
-  font-family:sans-serif;
-  color:white;
-  text-align:center;
-}
-
-#menu{
-  padding:20px;
-}
-
-.thumb{
-  width:80px;
-  margin:10px;
-  border-radius:8px;
-  cursor:pointer;
-  border:2px solid white;
-}
-
-#game{
-  display:none;
-}
-
-#preview{
-  width:100px;
-  margin:10px;
-  border-radius:8px;
-  border:2px solid white;
-}
-
-#board{
-  width:92vw;
-  max-width:420px;
-  aspect-ratio:1/1;
-  position:relative;
-  margin:auto;
-}
-
-.tile{
-  position:absolute;
-  width:25%;
-  height:25%;
-  background-size:400% 400%;
-  transition:0.15s ease;
-  border-radius:6px;
-}
-
-#controls{
-  margin-top:15px;
-  display:none;
-}
-
-button{
-  padding:8px 15px;
-  margin:6px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-</style>
+  <title>Sliding Puzzle</title>
+  <style>
+    body { text-align:center; font-family:Arial; }
+    .grid {
+      width:300px;
+      height:300px;
+      margin:20px auto;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(3,1fr);
+      gap:2px;
+    }
+    .tile {
+      background-size:300px 300px;
+      cursor:pointer;
+    }
+    .empty {
+      background:none;
+    }
+    button { margin:5px; padding:8px 15px; }
+  </style>
 </head>
 <body>
 
-<!-- MENU PILIH GAMBAR -->
-<div id="menu">
-  <h2>Pilih Gambar</h2>
-</div>
+<button onclick="goBack()">⬅ Back</button>
+<button onclick="prevImage()">⬅ Prev</button>
+<button onclick="nextImage()">Next ➡</button>
 
-<!-- GAME AREA -->
-<div id="game">
-  <button onclick="goBack()">⬅ Back</button>
-  <br>
-  <img id="preview">
-  <div id="board"></div>
-
-  <div id="controls">
-    <h3>Level Selesai 🎉</h3>
-    <button onclick="downloadImage()">Download</button>
-  </div>
-</div>
+<h3>Sliding Puzzle</h3>
+<div class="grid" id="puzzle"></div>
 
 <script>
+
 const images = [
+"pelacur-berjilbab-hunaifatul-azizah-aini.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-1.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-2.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-3.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-4.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-5.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-6.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-7.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-8.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-9.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-10.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-11.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-12.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-13.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-14.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-15.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-16.jpg",
-"pelacur-berjilbab-hunaifatul-azizah-aini-03.jpg",
-"pelacur-berjilbab-hunaifatul-azizah-aini-13.jpg"
+"pelacur-berjilbab-hunaifatul-azizah-aini-17.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-18.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-19.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-20.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-21.jpg"
 ];
 
-const size=4;
-let tiles=[];
-let empty;
-let currentImage=0;
+const urlParams = new URLSearchParams(window.location.search);
+let index = parseInt(urlParams.get("index"));
+if (isNaN(index) || index < 0 || index >= images.length) index = 0;
 
-const menu=document.getElementById("menu");
-const game=document.getElementById("game");
-const board=document.getElementById("board");
-const preview=document.getElementById("preview");
-const controls=document.getElementById("controls");
+const puzzle = document.getElementById("puzzle");
+let emptyIndex;
+let positions = [];
 
-/* BUAT THUMBNAIL MENU */
-images.forEach((img,index)=>{
-  let thumb=document.createElement("img");
-  thumb.src=img;
-  thumb.className="thumb";
-  thumb.onclick=()=>startGame(index);
-  menu.appendChild(thumb);
-});
+function initPuzzle() {
+  puzzle.innerHTML = "";
+  positions = [];
+  emptyIndex = 8;
 
-function startGame(index){
-  currentImage=index;
-  menu.style.display="none";
-  game.style.display="block";
-  init();
-}
-
-function goBack(){
-  game.style.display="none";
-  menu.style.display="block";
-  board.innerHTML="";
-  controls.style.display="none";
-}
-
-function init(){
-  board.innerHTML="";
-  tiles=[];
-  empty={row:3,col:3};
-  controls.style.display="none";
-  preview.src=images[currentImage];
-
-  for(let r=0;r<size;r++){
-    for(let c=0;c<size;c++){
-      if(r===3 && c===3) continue;
-
-      let tile=document.createElement("div");
-      tile.className="tile";
-      tile.style.backgroundImage=`url(${images[currentImage]})`;
-      tile.style.backgroundPosition=`${c*33.33}% ${r*33.33}%`;
-      tile.style.left=(c*25)+"%";
-      tile.style.top=(r*25)+"%";
-      tile.dataset.row=r;
-      tile.dataset.col=c;
-      tile.onclick=move;
-      board.appendChild(tile);
-      tiles.push(tile);
-    }
+  for (let i = 0; i < 9; i++) {
+    positions.push(i);
   }
 
   shuffle();
+
+  render();
 }
 
-function move(){
-  let r=parseInt(this.dataset.row);
-  let c=parseInt(this.dataset.col);
+function render() {
+  puzzle.innerHTML = "";
 
-  if((Math.abs(r-empty.row)+Math.abs(c-empty.col))===1){
-    this.style.left=(empty.col*25)+"%";
-    this.style.top=(empty.row*25)+"%";
-    this.dataset.row=empty.row;
-    this.dataset.col=empty.col;
-    empty={row:r,col:c};
-    checkWin();
-  }
-}
+  for (let i = 0; i < 9; i++) {
+    const tile = document.createElement("div");
+    tile.classList.add("tile");
 
-function shuffle(){
-  for(let i=0;i<300;i++){
-    let neighbors=tiles.filter(t=>{
-      let r=parseInt(t.dataset.row);
-      let c=parseInt(t.dataset.col);
-      return (Math.abs(r-empty.row)+Math.abs(c-empty.col))===1;
-    });
-    let rand=neighbors[Math.floor(Math.random()*neighbors.length)];
-    rand.click();
-  }
-}
-
-function checkWin(){
-  let win=true;
-  tiles.forEach(t=>{
-    let r=parseInt(t.dataset.row);
-    let c=parseInt(t.dataset.col);
-    let correctRow=Math.floor(parseFloat(t.style.backgroundPosition.split(" ")[1])/33.33);
-    let correctCol=Math.floor(parseFloat(t.style.backgroundPosition.split(" ")[0])/33.33);
-    if(r!==correctRow || c!==correctCol){
-      win=false;
+    if (positions[i] === 8) {
+      tile.classList.add("empty");
+      emptyIndex = i;
+    } else {
+      let x = (positions[i] % 3) * -100;
+      let y = Math.floor(positions[i] / 3) * -100;
+      tile.style.backgroundImage = "url(images/" + images[index] + ")";
+      tile.style.backgroundPosition = x + "px " + y + "px";
     }
-  });
 
-  if(win){
-    controls.style.display="block";
+    tile.onclick = () => moveTile(i);
+    puzzle.appendChild(tile);
   }
 }
 
-function downloadImage(){
-  let link=document.createElement("a");
-  link.href=images[currentImage];
-  link.download="gambar.jpg";
-  link.click();
-}
-</script>
+function moveTile(i) {
+  const row = Math.floor(i / 3);
+  const col = i % 3;
+  const emptyRow = Math.floor(emptyIndex / 3);
+  const emptyCol = emptyIndex % 3;
 
+  const isAdjacent =
+    (row === emptyRow && Math.abs(col - emptyCol) === 1) ||
+    (col === emptyCol && Math.abs(row - emptyRow) === 1);
+
+  if (isAdjacent) {
+    [positions[i], positions[emptyIndex]] =
+    [positions[emptyIndex], positions[i]];
+    render();
+  }
+}
+
+function shuffle() {
+  for (let i = 0; i < 200; i++) {
+    const rand = Math.floor(Math.random() * 9);
+    moveTile(rand);
+  }
+}
+
+function nextImage() {
+  index = (index + 1) % images.length;
+  window.location.href = "puzzle.html?index=" + index;
+}
+
+function prevImage() {
+  index = (index - 1 + images.length) % images.length;
+  window.location.href = "puzzle.html?index=" + index;
+}
+
+function goBack() {
+  window.location.href = "index.html";
+}
+
+initPuzzle();
+
+</script>
 </body>
 </html>
