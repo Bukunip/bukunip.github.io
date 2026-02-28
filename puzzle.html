@@ -12,14 +12,18 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
-  height:100vh;
   font-family:sans-serif;
   color:white;
 }
 
 h2{
   margin:10px 0;
+}
+
+#preview{
+  width:120px;
+  margin-bottom:10px;
+  border:2px solid white;
 }
 
 #puzzle{
@@ -43,7 +47,7 @@ h2{
 }
 
 .controls{
-  margin-top:15px;
+  margin:15px;
 }
 
 button{
@@ -58,6 +62,8 @@ button{
 <body>
 
 <h2>Sliding Puzzle</h2>
+
+<img id="preview">
 
 <div id="puzzle"></div>
 
@@ -94,27 +100,43 @@ const images = [
 ];
 
 const puzzle = document.getElementById("puzzle");
+const preview = document.getElementById("preview");
 const size = 3;
 let tiles = [];
 let emptyIndex = size*size-1;
 let currentImage = 0;
+let order = [];
+
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 
 function createPuzzle(){
-  puzzle.innerHTML = "";
-  tiles = [];
+  puzzle.innerHTML="";
+  tiles=[];
+  order = [...Array(size*size).keys()];
+  shuffle(order);
+
+  preview.src = images[currentImage];
 
   for(let i=0;i<size*size;i++){
     const tile = document.createElement("div");
     tile.classList.add("tile");
 
-    if(i !== emptyIndex){
-      const row = Math.floor(i/size);
-      const col = i%size;
+    let value = order[i];
+
+    if(value !== size*size-1){
+      const row = Math.floor(value/size);
+      const col = value%size;
 
       tile.style.backgroundImage = `url(${images[currentImage]})`;
       tile.style.backgroundPosition = `${(col/(size-1))*100}% ${(row/(size-1))*100}%`;
     }else{
       tile.classList.add("empty");
+      emptyIndex = i;
     }
 
     tile.addEventListener("click", ()=>moveTile(i));
@@ -130,11 +152,13 @@ function moveTile(index){
   const emptyCol = emptyIndex%size;
 
   if((Math.abs(row-emptyRow)+Math.abs(col-emptyCol))===1){
-    tiles[emptyIndex].style.backgroundImage = tiles[index].style.backgroundImage;
-    tiles[emptyIndex].style.backgroundPosition = tiles[index].style.backgroundPosition;
-    tiles[emptyIndex].classList.remove("empty");
+    [tiles[emptyIndex].style.backgroundImage, tiles[index].style.backgroundImage] =
+    [tiles[index].style.backgroundImage, tiles[emptyIndex].style.backgroundImage];
 
-    tiles[index].style.backgroundImage = "";
+    [tiles[emptyIndex].style.backgroundPosition, tiles[index].style.backgroundPosition] =
+    [tiles[index].style.backgroundPosition, tiles[emptyIndex].style.backgroundPosition];
+
+    tiles[emptyIndex].classList.remove("empty");
     tiles[index].classList.add("empty");
 
     emptyIndex = index;
@@ -142,20 +166,12 @@ function moveTile(index){
 }
 
 function nextImage(){
-  currentImage++;
-  if(currentImage >= images.length){
-    currentImage = 0;
-  }
-  emptyIndex = size*size-1;
+  currentImage = (currentImage+1)%images.length;
   createPuzzle();
 }
 
 function prevImage(){
-  currentImage--;
-  if(currentImage < 0){
-    currentImage = images.length-1;
-  }
-  emptyIndex = size*size-1;
+  currentImage = (currentImage-1+images.length)%images.length;
   createPuzzle();
 }
 
