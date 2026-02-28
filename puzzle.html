@@ -9,17 +9,31 @@
 body{
   margin:0;
   background:#111;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
   font-family:sans-serif;
   color:white;
+  text-align:center;
+}
+
+#menu{
+  padding:20px;
+}
+
+.thumb{
+  width:80px;
+  margin:10px;
+  border-radius:8px;
+  cursor:pointer;
+  border:2px solid white;
+}
+
+#game{
+  display:none;
 }
 
 #preview{
-  width:110px;
-  margin:15px;
-  border-radius:10px;
+  width:100px;
+  margin:10px;
+  border-radius:8px;
   border:2px solid white;
 }
 
@@ -28,6 +42,7 @@ body{
   max-width:420px;
   aspect-ratio:1/1;
   position:relative;
+  margin:auto;
 }
 
 .tile{
@@ -40,30 +55,37 @@ body{
 }
 
 #controls{
-  margin-top:20px;
+  margin-top:15px;
   display:none;
-  text-align:center;
 }
 
 button{
-  padding:10px 18px;
+  padding:8px 15px;
   margin:6px;
   border:none;
-  border-radius:8px;
-  font-size:15px;
+  border-radius:6px;
   cursor:pointer;
 }
 </style>
 </head>
 <body>
 
-<img id="preview">
-<div id="board"></div>
+<!-- MENU PILIH GAMBAR -->
+<div id="menu">
+  <h2>Pilih Gambar</h2>
+</div>
 
-<div id="controls">
-  <h3>Level Selesai 🎉</h3>
-  <button onclick="downloadImage()">Download Gambar</button>
-  <button onclick="nextLevel()">Next</button>
+<!-- GAME AREA -->
+<div id="game">
+  <button onclick="goBack()">⬅ Back</button>
+  <br>
+  <img id="preview">
+  <div id="board"></div>
+
+  <div id="controls">
+    <h3>Level Selesai 🎉</h3>
+    <button onclick="downloadImage()">Download</button>
+  </div>
 </div>
 
 <script>
@@ -75,25 +97,46 @@ const images = [
 "pelacur-berjilbab-hunaifatul-azizah-aini-13.jpg"
 ];
 
-let level = 0;
-const size = 4;
-let tiles = [];
+const size=4;
+let tiles=[];
 let empty;
-const board = document.getElementById("board");
-const preview = document.getElementById("preview");
-const controls = document.getElementById("controls");
+let currentImage=0;
+
+const menu=document.getElementById("menu");
+const game=document.getElementById("game");
+const board=document.getElementById("board");
+const preview=document.getElementById("preview");
+const controls=document.getElementById("controls");
+
+/* BUAT THUMBNAIL MENU */
+images.forEach((img,index)=>{
+  let thumb=document.createElement("img");
+  thumb.src=img;
+  thumb.className="thumb";
+  thumb.onclick=()=>startGame(index);
+  menu.appendChild(thumb);
+});
+
+function startGame(index){
+  currentImage=index;
+  menu.style.display="none";
+  game.style.display="block";
+  init();
+}
+
+function goBack(){
+  game.style.display="none";
+  menu.style.display="block";
+  board.innerHTML="";
+  controls.style.display="none";
+}
 
 function init(){
   board.innerHTML="";
   tiles=[];
   empty={row:3,col:3};
   controls.style.display="none";
-
-  if(level >= images.length){
-    level = 0;
-  }
-
-  preview.src = images[level];
+  preview.src=images[currentImage];
 
   for(let r=0;r<size;r++){
     for(let c=0;c<size;c++){
@@ -101,7 +144,7 @@ function init(){
 
       let tile=document.createElement("div");
       tile.className="tile";
-      tile.style.backgroundImage=`url(${images[level]})`;
+      tile.style.backgroundImage=`url(${images[currentImage]})`;
       tile.style.backgroundPosition=`${c*33.33}% ${r*33.33}%`;
       tile.style.left=(c*25)+"%";
       tile.style.top=(r*25)+"%";
@@ -159,23 +202,12 @@ function checkWin(){
   }
 }
 
-function nextLevel(){
-  level++;
-  if(level >= images.length){
-    alert("Semua gambar sudah selesai 🎉");
-    level=0;
-  }
-  init();
-}
-
 function downloadImage(){
   let link=document.createElement("a");
-  link.href=images[level];
-  link.download="gambar-level-"+(level+1)+".jpg";
+  link.href=images[currentImage];
+  link.download="gambar.jpg";
   link.click();
 }
-
-init();
 </script>
 
 </body>
