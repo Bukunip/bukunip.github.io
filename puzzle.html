@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Sliding Puzzle</title>
-  <style>
-    body { text-align:center; font-family:Arial; }
-    .grid {
-      width:300px;
-      height:300px;
-      margin:20px auto;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      grid-template-rows:repeat(3,1fr);
-      gap:2px;
-    }
-    .tile {
-      background-size:300px 300px;
-      cursor:pointer;
-    }
-    .empty {
-      background:none;
-    }
-    button { margin:5px; padding:8px 15px; }
-  </style>
+<title>Sliding Puzzle</title>
+<style>
+body{
+  text-align:center;
+  font-family:Arial;
+}
+.grid{
+  width:300px;
+  height:300px;
+  margin:20px auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  gap:2px;
+}
+.tile{
+  background-size:300px 300px;
+  cursor:pointer;
+}
+.empty{
+  background:#ccc;
+}
+button{
+  margin:5px;
+  padding:8px 15px;
+}
+</style>
 </head>
 <body>
 
@@ -34,7 +40,7 @@
 
 <script>
 
-const images = [
+const images=[
 "pelacur-berjilbab-hunaifatul-azizah-aini.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-1.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-2.jpg",
@@ -59,28 +65,79 @@ const images = [
 "pelacur-berjilbab-hunaifatul-azizah-aini-21.jpg"
 ];
 
-const urlParams = new URLSearchParams(window.location.search);
-let index = parseInt(urlParams.get("index"));
-if (isNaN(index) || index < 0 || index >= images.length) index = 0;
+let urlParams=new URLSearchParams(window.location.search);
+let index=parseInt(urlParams.get("index"));
+if(isNaN(index)) index=0;
 
-const puzzle = document.getElementById("puzzle");
-let emptyIndex;
-let positions = [];
+const puzzle=document.getElementById("puzzle");
+let empty=8;
+let tiles=[0,1,2,3,4,5,6,7,8];
 
-function initPuzzle() {
-  puzzle.innerHTML = "";
-  positions = [];
-  emptyIndex = 8;
+function draw(){
+  puzzle.innerHTML="";
+  for(let i=0;i<9;i++){
+    let div=document.createElement("div");
+    div.className="tile";
 
-  for (let i = 0; i < 9; i++) {
-    positions.push(i);
+    if(tiles[i]===8){
+      div.classList.add("empty");
+    }else{
+      let x=(tiles[i]%3)*-100;
+      let y=Math.floor(tiles[i]/3)*-100;
+
+      div.style.backgroundImage=
+      `url("images/${images[index]}")`;
+      div.style.backgroundPosition=
+      x+"px "+y+"px";
+    }
+
+    div.onclick=()=>move(i);
+    puzzle.appendChild(div);
   }
-
-  shuffle();
-
-  render();
 }
 
-function render() {
-  puzzle.innerHTML = "";
-  
+function move(i){
+  let row=Math.floor(i/3);
+  let col=i%3;
+  let erow=Math.floor(empty/3);
+  let ecol=empty%3;
+
+  let valid=
+  (row===erow && Math.abs(col-ecol)===1)||
+  (col===ecol && Math.abs(row-erow)===1);
+
+  if(valid){
+    [tiles[i],tiles[empty]]=[tiles[empty],tiles[i]];
+    empty=i;
+    draw();
+  }
+}
+
+function shuffle(){
+  for(let i=0;i<100;i++){
+    let r=Math.floor(Math.random()*9);
+    move(r);
+  }
+}
+
+function nextImage(){
+  index=(index+1)%images.length;
+  window.location.href="puzzle.html?index="+index;
+}
+
+function prevImage(){
+  index=(index-1+images.length)%images.length;
+  window.location.href="puzzle.html?index="+index;
+}
+
+function goBack(){
+  window.location.href="index.html";
+}
+
+shuffle();
+draw();
+
+</script>
+
+</body>
+</html>
