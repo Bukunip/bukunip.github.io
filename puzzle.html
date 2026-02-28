@@ -1,46 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sliding Puzzle</title>
+
 <style>
 body{
-  text-align:center;
-  font-family:Arial;
+  margin:0;
+  background:black;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100vh;
+  font-family:sans-serif;
+  color:white;
 }
-.grid{
-  width:300px;
-  height:300px;
-  margin:20px auto;
+
+h2{
+  margin:10px 0;
+}
+
+#puzzle{
+  width:95vw;
+  height:95vw;
+  max-width:500px;
+  max-height:500px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   grid-template-rows:repeat(3,1fr);
   gap:2px;
 }
+
 .tile{
-  background-size:300px 300px;
+  background-size:300% 300%;
   cursor:pointer;
 }
+
 .empty{
-  background:#ccc;
+  background:none;
 }
+
+.controls{
+  margin-top:15px;
+}
+
 button{
+  padding:10px 20px;
+  font-size:16px;
   margin:5px;
-  padding:8px 15px;
+  cursor:pointer;
 }
 </style>
 </head>
+
 <body>
 
-<button onclick="goBack()">⬅ Back</button>
-<button onclick="prevImage()">⬅ Prev</button>
-<button onclick="nextImage()">Next ➡</button>
+<h2>Sliding Puzzle</h2>
 
-<h3>Sliding Puzzle</h3>
-<div class="grid" id="puzzle"></div>
+<div id="puzzle"></div>
+
+<div class="controls">
+  <button onclick="prevImage()">Back</button>
+  <button onclick="nextImage()">Next</button>
+</div>
 
 <script>
 
-const images=[
+const images = [
 "pelacur-berjilbab-hunaifatul-azizah-aini.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-1.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-2.jpg",
@@ -65,77 +93,73 @@ const images=[
 "pelacur-berjilbab-hunaifatul-azizah-aini-21.jpg"
 ];
 
-let urlParams=new URLSearchParams(window.location.search);
-let index=parseInt(urlParams.get("index"));
-if(isNaN(index)) index=0;
+const puzzle = document.getElementById("puzzle");
+const size = 3;
+let tiles = [];
+let emptyIndex = size*size-1;
+let currentImage = 0;
 
-const puzzle=document.getElementById("puzzle");
-let empty=8;
-let tiles=[0,1,2,3,4,5,6,7,8];
+function createPuzzle(){
+  puzzle.innerHTML = "";
+  tiles = [];
 
-function draw(){
-  puzzle.innerHTML="";
-  for(let i=0;i<9;i++){
-    let div=document.createElement("div");
-    div.className="tile";
+  for(let i=0;i<size*size;i++){
+    const tile = document.createElement("div");
+    tile.classList.add("tile");
 
-    if(tiles[i]===8){
-      div.classList.add("empty");
+    if(i !== emptyIndex){
+      const row = Math.floor(i/size);
+      const col = i%size;
+
+      tile.style.backgroundImage = `url(${images[currentImage]})`;
+      tile.style.backgroundPosition = `${(col/(size-1))*100}% ${(row/(size-1))*100}%`;
     }else{
-      let x=(tiles[i]%3)*-100;
-      let y=Math.floor(tiles[i]/3)*-100;
-
-      div.style.backgroundImage=
-      `url("images/${images[index]}")`;
-      div.style.backgroundPosition=
-      x+"px "+y+"px";
+      tile.classList.add("empty");
     }
 
-    div.onclick=()=>move(i);
-    puzzle.appendChild(div);
+    tile.addEventListener("click", ()=>moveTile(i));
+    puzzle.appendChild(tile);
+    tiles.push(tile);
   }
 }
 
-function move(i){
-  let row=Math.floor(i/3);
-  let col=i%3;
-  let erow=Math.floor(empty/3);
-  let ecol=empty%3;
+function moveTile(index){
+  const row = Math.floor(index/size);
+  const col = index%size;
+  const emptyRow = Math.floor(emptyIndex/size);
+  const emptyCol = emptyIndex%size;
 
-  let valid=
-  (row===erow && Math.abs(col-ecol)===1)||
-  (col===ecol && Math.abs(row-erow)===1);
+  if((Math.abs(row-emptyRow)+Math.abs(col-emptyCol))===1){
+    tiles[emptyIndex].style.backgroundImage = tiles[index].style.backgroundImage;
+    tiles[emptyIndex].style.backgroundPosition = tiles[index].style.backgroundPosition;
+    tiles[emptyIndex].classList.remove("empty");
 
-  if(valid){
-    [tiles[i],tiles[empty]]=[tiles[empty],tiles[i]];
-    empty=i;
-    draw();
-  }
-}
+    tiles[index].style.backgroundImage = "";
+    tiles[index].classList.add("empty");
 
-function shuffle(){
-  for(let i=0;i<100;i++){
-    let r=Math.floor(Math.random()*9);
-    move(r);
+    emptyIndex = index;
   }
 }
 
 function nextImage(){
-  index=(index+1)%images.length;
-  window.location.href="puzzle.html?index="+index;
+  currentImage++;
+  if(currentImage >= images.length){
+    currentImage = 0;
+  }
+  emptyIndex = size*size-1;
+  createPuzzle();
 }
 
 function prevImage(){
-  index=(index-1+images.length)%images.length;
-  window.location.href="puzzle.html?index="+index;
+  currentImage--;
+  if(currentImage < 0){
+    currentImage = images.length-1;
+  }
+  emptyIndex = size*size-1;
+  createPuzzle();
 }
 
-function goBack(){
-  window.location.href="index.html";
-}
-
-shuffle();
-draw();
+createPuzzle();
 
 </script>
 
