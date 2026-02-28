@@ -20,7 +20,7 @@ body{
   background-attachment:fixed;
 }
 
-/* lapisan gelap biar puzzle tetap kelihatan */
+/* lapisan gelap */
 body::before{
   content:"";
   position:fixed;
@@ -86,6 +86,7 @@ button{
 
 <script>
 
+// FOTO PUZZLE
 const images = [
 "pelacur-berjilbab-hunaifatul-azizah-aini.jpg",
 "pelacur-berjilbab-hunaifatul-azizah-aini-1.jpg",
@@ -111,6 +112,32 @@ const images = [
 "pelacur-berjilbab-hunaifatul-azizah-aini-21.jpg"
 ];
 
+// FOTO BACKGROUND
+const backgrounds = [
+"background.jpg",
+"background-1.jpg",
+"background-2.jpg",
+"background-3.jpg",
+"background-4.jpg",
+"background-5.jpg",
+"background-6.jpg",
+"background-7.jpg",
+"background-8.jpg",
+"background-9.jpg",
+"background-10.jpg",
+"background-11.jpg",
+"background-12.jpg",
+"background-13.jpg",
+"background-14.jpg",
+"background-15.jpg",
+"background-16.jpg",
+"background-17.jpg",
+"background-18.jpg",
+"background-19.jpg",
+"background-20.jpg",
+"background-21.jpg"
+];
+
 const puzzle = document.getElementById("puzzle");
 const preview = document.getElementById("preview");
 const size = 3;
@@ -127,7 +154,7 @@ function shuffle(array){
 }
 
 function setBackground(){
-  document.body.style.backgroundImage = `url(${images[currentImage]})`;
+  document.body.style.backgroundImage = `url(${backgrounds[currentImage]})`;
 }
 
 function createPuzzle(){
