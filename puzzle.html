@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Puzzle 4x4</title>
+
+<style>
+body{
+  margin:0;
+  background:#111;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-family:sans-serif;
+  color:white;
+}
+
+#preview{
+  width:120px;
+  margin:15px;
+  border-radius:10px;
+  border:2px solid white;
+}
+
+#puzzle{
+  width:92vw;
+  max-width:420px;
+  aspect-ratio:1/1;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:repeat(4,1fr);
+  gap:2px;
+}
+
+.tile{
+  background-size:400% 400%;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.15s;
+}
+
+.empty{
+  background:none;
+  cursor:default;
+}
+
+#message{
+  margin-top:20px;
+  display:none;
+  text-align:center;
+}
+
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  margin-top:10px;
+  font-size:16px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<img id="preview">
+
+<div id="puzzle"></div>
+
+<div id="message">
+  <h2>Semua Level Selesai 🎉</h2>
+  <button onclick="downloadImage()">Download Gambar Terakhir</button>
+</div>
+
+<script>
+const images = [
+  "pelacur-berjilbab-hunaifatul-azizah-aini-11.jpg",
+  "pelacur-berjilbab-hunaifatul-azizah-aini-12.jpg",
+  "pelacur-berjilbab-hunaifatul-azizah-aini-16.jpg",
+  "pelacur-berjilbab-hunaifatul-azizah-aini-03.jpg",
+  "pelacur-berjilbab-hunaifatul-azizah-aini-13.jpg"
+];
+
+let currentLevel = 0;
+const size = 4;
+let emptyIndex;
+let puzzle = document.getElementById("puzzle");
+let preview = document.getElementById("preview");
+let message = document.getElementById("message");
+
+function init(level){
+  puzzle.innerHTML="";
+  emptyIndex=size*size-1;
+  preview.src = images[level];
+  message.style.display="none";
+
+  for(let i=0;i<size*size;i++){
+    let tile=document.createElement("div");
+    tile.classList.add("tile");
+
+    if(i===emptyIndex){
+      tile.classList.add("empty");
+    }else{
+      let row=Math.floor(i/size);
+      let col=i%size;
+      tile.style.backgroundImage=`url(${images[level]})`;
+      tile.style.backgroundPosition=`${col*33.33}% ${row*33.33}%`;
+    }
+
+    tile.addEventListener("click", moveTile);
+    puzzle.appendChild(tile);
+  }
+
+  shuffle();
+}
+
+function moveTile(){
+  let tiles=[...puzzle.children];
+  let index=tiles.indexOf(this);
+
+  let valid=[
+    emptyIndex-1,
+    emptyIndex+1,
+    emptyIndex-size,
+    emptyIndex+size
+  ];
+
+  if(valid.includes(index)){
+    puzzle.insertBefore(tiles[emptyIndex], tiles[index]);
+    emptyIndex=index;
+    checkWin();
+  }
+}
+
+function shuffle(){
+  for(let i=0;i<300;i++){
+    let neighbors=[
+      emptyIndex-1,
+      emptyIndex+1,
+      emptyIndex-size,
+      emptyIndex+size
+    ].filter(n=>n>=0 && n<size*size);
+    let rand=neighbors[Math.floor(Math.random()*neighbors.length)];
+    let tiles=[...puzzle.children];
+    puzzle.insertBefore(tiles[emptyIndex], tiles[rand]);
+    emptyIndex=rand;
+  }
+}
+
+function checkWin(){
+  let tiles=[...puzzle.children];
+  let correct=true;
+
+  for(let i=0;i<tiles.length;i++){
+    if(!tiles[i].classList.contains("empty")){
+      let row=Math.floor(i/size);
+      let col=i%size;
+      let expected=`${col*33.33}% ${row*33.33}%`;
+      if(tiles[i].style.backgroundPosition!==expected){
+        correct=false;
+        break;
+      }
+    }
+  }
+
+  if(correct){
+    currentLevel++;
+    if(currentLevel < images.length){
+      setTimeout(()=>{
+        init(currentLevel);
+      },800);
+    }else{
+      message.style.display="block";
+    }
+  }
+}
+
+function downloadImage(){
+  let link=document.createElement("a");
+  link.href=images[images.length-1];
+  link.download="gambar-terakhir.jpg";
+  link.click();
+}
+
+init(currentLevel);
+</script>
+
+</body>
+</html>
