@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Puzzle 4x4</title>
+<meta charset="UTF-8">
+<title>Puzzle Pro</title>
 
 <style>
 body{
@@ -17,172 +17,140 @@ body{
 }
 
 #preview{
-  width:120px;
+  width:110px;
   margin:15px;
   border-radius:10px;
   border:2px solid white;
 }
 
-#puzzle{
+#board{
   width:92vw;
   max-width:420px;
   aspect-ratio:1/1;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  grid-template-rows:repeat(4,1fr);
-  gap:2px;
+  position:relative;
 }
 
 .tile{
+  position:absolute;
+  width:25%;
+  height:25%;
   background-size:400% 400%;
+  transition:0.15s ease;
   border-radius:6px;
-  cursor:pointer;
-  transition:0.15s;
 }
 
 .empty{
   background:none;
-  cursor:default;
 }
 
 #message{
-  margin-top:20px;
   display:none;
-  text-align:center;
-}
-
-button{
-  padding:10px 20px;
-  border:none;
-  border-radius:8px;
-  margin-top:10px;
-  font-size:16px;
-  cursor:pointer;
+  margin-top:20px;
 }
 </style>
 </head>
 <body>
 
 <img id="preview">
-
-<div id="puzzle"></div>
+<div id="board"></div>
 
 <div id="message">
   <h2>Semua Level Selesai 🎉</h2>
-  <button onclick="downloadImage()">Download Gambar Terakhir</button>
 </div>
 
 <script>
 const images = [
-  "pelacur-berjilbab-hunaifatul-azizah-aini-11.jpg",
-  "pelacur-berjilbab-hunaifatul-azizah-aini-12.jpg",
-  "pelacur-berjilbab-hunaifatul-azizah-aini-16.jpg",
-  "pelacur-berjilbab-hunaifatul-azizah-aini-03.jpg",
-  "pelacur-berjilbab-hunaifatul-azizah-aini-13.jpg"
+"pelacur-berjilbab-hunaifatul-azizah-aini-11.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-12.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-16.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-03.jpg",
+"pelacur-berjilbab-hunaifatul-azizah-aini-13.jpg"
 ];
 
-let currentLevel = 0;
-const size = 4;
-let emptyIndex;
-let puzzle = document.getElementById("puzzle");
-let preview = document.getElementById("preview");
-let message = document.getElementById("message");
+let level=0;
+const size=4;
+let tiles=[];
+let empty={row:3,col:3};
+const board=document.getElementById("board");
+const preview=document.getElementById("preview");
 
-function init(level){
-  puzzle.innerHTML="";
-  emptyIndex=size*size-1;
-  preview.src = images[level];
-  message.style.display="none";
+function init(){
+board.innerHTML="";
+tiles=[];
+empty={row:3,col:3};
+preview.src=images[level];
 
-  for(let i=0;i<size*size;i++){
-    let tile=document.createElement("div");
-    tile.classList.add("tile");
+for(let r=0;r<size;r++){
+for(let c=0;c<size;c++){
+if(r===3 && c===3) continue;
 
-    if(i===emptyIndex){
-      tile.classList.add("empty");
-    }else{
-      let row=Math.floor(i/size);
-      let col=i%size;
-      tile.style.backgroundImage=`url(${images[level]})`;
-      tile.style.backgroundPosition=`${col*33.33}% ${row*33.33}%`;
-    }
+let tile=document.createElement("div");
+tile.className="tile";
+tile.style.backgroundImage=`url(${images[level]})`;
+tile.style.backgroundPosition=`${c*33.33}% ${r*33.33}%`;
+tile.style.left=(c*25)+"%";
+tile.style.top=(r*25)+"%";
 
-    tile.addEventListener("click", moveTile);
-    puzzle.appendChild(tile);
-  }
+tile.dataset.row=r;
+tile.dataset.col=c;
 
-  shuffle();
+tile.onclick=move;
+board.appendChild(tile);
+tiles.push(tile);
+}
 }
 
-function moveTile(){
-  let tiles=[...puzzle.children];
-  let index=tiles.indexOf(this);
+shuffle();
+}
 
-  let valid=[
-    emptyIndex-1,
-    emptyIndex+1,
-    emptyIndex-size,
-    emptyIndex+size
-  ];
+function move(){
+let r=parseInt(this.dataset.row);
+let c=parseInt(this.dataset.col);
 
-  if(valid.includes(index)){
-    puzzle.insertBefore(tiles[emptyIndex], tiles[index]);
-    emptyIndex=index;
-    checkWin();
-  }
+if((Math.abs(r-empty.row)+Math.abs(c-empty.col))===1){
+this.style.left=(empty.col*25)+"%";
+this.style.top=(empty.row*25)+"%";
+
+this.dataset.row=empty.row;
+this.dataset.col=empty.col;
+
+empty={row:r,col:c};
+checkWin();
+}
 }
 
 function shuffle(){
-  for(let i=0;i<300;i++){
-    let neighbors=[
-      emptyIndex-1,
-      emptyIndex+1,
-      emptyIndex-size,
-      emptyIndex+size
-    ].filter(n=>n>=0 && n<size*size);
-    let rand=neighbors[Math.floor(Math.random()*neighbors.length)];
-    let tiles=[...puzzle.children];
-    puzzle.insertBefore(tiles[emptyIndex], tiles[rand]);
-    emptyIndex=rand;
-  }
+for(let i=0;i<300;i++){
+let neighbors=tiles.filter(t=>{
+let r=parseInt(t.dataset.row);
+let c=parseInt(t.dataset.col);
+return (Math.abs(r-empty.row)+Math.abs(c-empty.col))===1;
+});
+let rand=neighbors[Math.floor(Math.random()*neighbors.length)];
+rand.click();
+}
 }
 
 function checkWin(){
-  let tiles=[...puzzle.children];
-  let correct=true;
-
-  for(let i=0;i<tiles.length;i++){
-    if(!tiles[i].classList.contains("empty")){
-      let row=Math.floor(i/size);
-      let col=i%size;
-      let expected=`${col*33.33}% ${row*33.33}%`;
-      if(tiles[i].style.backgroundPosition!==expected){
-        correct=false;
-        break;
-      }
-    }
-  }
-
-  if(correct){
-    currentLevel++;
-    if(currentLevel < images.length){
-      setTimeout(()=>{
-        init(currentLevel);
-      },800);
-    }else{
-      message.style.display="block";
-    }
-  }
+let win=true;
+tiles.forEach(t=>{
+let r=parseInt(t.dataset.row);
+let c=parseInt(t.dataset.col);
+let bg=t.style.backgroundPosition;
+let correct=`${c*33.33}% ${r*33.33}%`;
+if(bg!==correct) win=false;
+});
+if(win){
+level++;
+if(level<images.length){
+setTimeout(init,800);
+}else{
+document.getElementById("message").style.display="block";
+}
+}
 }
 
-function downloadImage(){
-  let link=document.createElement("a");
-  link.href=images[images.length-1];
-  link.download="gambar-terakhir.jpg";
-  link.click();
-}
-
-init(currentLevel);
+init();
 </script>
 
 </body>
